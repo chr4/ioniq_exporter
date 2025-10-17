@@ -30,7 +30,7 @@ func main() {
 	var (
 		listenAddr   = flag.String("web.listen-address", ":9333", "The address to listen on for HTTP requests.")
 		username     = flag.String("username", "user@example.com", "Login email for Hyundai Bluelink")
-		password     = flag.String("password", "secret1234", "Password for Hyundai Bluelink account")
+		token        = flag.String("token", "secret1234", "Refresh token for Hyundai Bluelink account")
 		vin          = flag.String("vin", "TM...", "VIN of vehicle to check")
 		pollInterval = flag.Int("poll-interval", 60, "Interval in seconds between polls.")
 		showVersion  = flag.Bool("version", false, "Print version information and exit.")
@@ -75,24 +75,26 @@ func main() {
 	prometheus.MustRegister(collectors.NewBuildInfoCollector())
 
 	// Use connect credentials to build provider
+	// Check https://github.com/evcc-io/evcc/blob/master/vehicle/bluelink.go#L28-L37 for updates
 	settings := bluelink.Config{
 		URI:               "https://prd.eu-ccapi.hyundai.com:8080",
 		BasicToken:        "NmQ0NzdjMzgtM2NhNC00Y2YzLTk1NTctMmExOTI5YTk0NjU0OktVeTQ5WHhQekxwTHVvSzB4aEJDNzdXNlZYaG10UVI5aVFobUlGampvWTRJcHhzVg==",
 		CCSPServiceID:     "6d477c38-3ca4-4cf3-9557-2a1929a94654",
 		CCSPApplicationID: bluelink.HyundaiAppID,
-		AuthClientID:      "64621b96-0f0d-11ec-82a8-0242ac130003",
-		BrandAuthUrl:      "https://eu-account.hyundai.com/auth/realms/euhyundaiidm/protocol/openid-connect/auth?client_id=%s&scope=openid+profile+email+phone&response_type=code&hkid_session_reset=true&redirect_uri=%s/api/v1/user/integration/redirect/login&ui_locales=%s&state=%s:%s",
+		AuthClientID:      "6d477c38-3ca4-4cf3-9557-2a1929a94654",
+		BrandAuthUrl:      "%s/auth/api/v2/user/oauth2/authorize?response_type=code&client_id=%s&redirect_uri=%s/api/v1/user/oauth2/redirect&lang=%s&state=ccsp",
 		PushType:          "GCM",
 		Cfb:               "RFtoRq/vDXJmRndoZaZQyfOot7OrIqGVFj96iY2WL3yyH5Z/pUvlUhqmCxD2t+D65SQ=",
+		LoginFormHost:     "https://idpconnect-eu.hyundai.com",
 	}
 
-	logHandler := util.NewLogger("ioniq").Redact(*username, *password, *vin)
+	logHandler := util.NewLogger("ioniq").Redact(*username, *token, *vin)
 
 	// Poll inverter values
 	go func() {
 		for {
 			identity := bluelink.NewIdentity(logHandler, settings)
-			if err := identity.Login(*username, *password, "en"); err != nil {
+			if err := identity.Login(*username, *token, "en", "hyundai"); err != nil {
 				log.Println(err)
 				time.Sleep(time.Duration(*pollInterval) * time.Second)
 				continue
