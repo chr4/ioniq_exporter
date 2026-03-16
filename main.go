@@ -22,7 +22,7 @@ import (
 )
 
 func init() {
-	promVersion.Version = "0.1.0"
+	promVersion.Version = "0.3.0"
 	prometheus.MustRegister(version.NewCollector("ioniq_exporter"))
 }
 
@@ -80,12 +80,12 @@ func main() {
 		URI:               "https://prd.eu-ccapi.hyundai.com:8080",
 		BasicToken:        "NmQ0NzdjMzgtM2NhNC00Y2YzLTk1NTctMmExOTI5YTk0NjU0OktVeTQ5WHhQekxwTHVvSzB4aEJDNzdXNlZYaG10UVI5aVFobUlGampvWTRJcHhzVg==",
 		CCSPServiceID:     "6d477c38-3ca4-4cf3-9557-2a1929a94654",
-		CCSPApplicationID: bluelink.HyundaiAppID,
-		AuthClientID:      "6d477c38-3ca4-4cf3-9557-2a1929a94654",
-		BrandAuthUrl:      "%s/auth/api/v2/user/oauth2/authorize?response_type=code&client_id=%s&redirect_uri=%s/api/v1/user/oauth2/redirect&lang=%s&state=ccsp",
+		CCSPServiceSecret: "KUy49XxPzLpLuoK0xhBC77W6VXhmtQR9iQhmIFjjoY4IpxsV",
+		CCSPApplicationID: "014d2225-8495-4735-812d-2616334fd15d",
 		PushType:          "GCM",
 		Cfb:               "RFtoRq/vDXJmRndoZaZQyfOot7OrIqGVFj96iY2WL3yyH5Z/pUvlUhqmCxD2t+D65SQ=",
 		LoginFormHost:     "https://idpconnect-eu.hyundai.com",
+		Brand:             "hyundai",
 	}
 
 	logHandler := util.NewLogger("ioniq").Redact(*username, *token, *vin)
