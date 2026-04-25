@@ -3,11 +3,13 @@ module ioniq_exporter
 go 1.26.0
 
 require (
-	github.com/evcc-io/evcc v0.0.0-20251119215409-15b732dbffd8
+	github.com/evcc-io/evcc v0.0.0-20260424183542-f2f7ecf5cfdf
 	github.com/prometheus/client_golang v1.23.2
 	github.com/prometheus/common v0.67.5
 	github.com/samber/lo v1.53.0
 )
+
+replace go.yaml.in/yaml/v4 => go.yaml.in/yaml/v4 v4.0.0-rc.3
 
 require (
 	dario.cat/mergo v1.0.2 // indirect
@@ -40,6 +42,7 @@ require (
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	go.uber.org/mock v0.6.0 // indirect
 	go.yaml.in/yaml/v2 v2.4.3 // indirect
+	go.yaml.in/yaml/v4 v4.0.0-rc.4 // indirect
 	golang.org/x/crypto v0.50.0 // indirect
 	golang.org/x/oauth2 v0.36.0 // indirect
 	golang.org/x/sys v0.43.0 // indirect

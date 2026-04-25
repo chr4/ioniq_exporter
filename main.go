@@ -112,7 +112,7 @@ func main() {
 				continue
 			}
 
-			provider := bluelink.NewProvider(api, vehicle, time.Second*30, time.Second*30)
+			provider := bluelink.NewProvider(api, vehicle, time.Second*30)
 
 			rangeKm, err := provider.Range()
 			if err != nil {
